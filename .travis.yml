@@ -4,7 +4,7 @@ services:
 
 before_install:
   # Build testing image
-  - docker build -t leawn/fibonacci-calc-client-test -f ./client/Dockerfile.dev .
+  - docker build -t leawn/fibonacci-calc-client-test -f ./client/Dockerfile.dev ./client
 
 script:
   # Run tests
