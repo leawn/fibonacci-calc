@@ -61,7 +61,12 @@ app.post('/values', async (req, res, next) => {
 
     redisClient.hset('values', index, 'Nothing yet!');
     redisPublisher.publish('insert', index);
-    pgClient.query('INSERT INTO "values"(number) VALUES($1)', [index]);
+    pgClient
+        .query('CREATE TABLE IF NOT EXISTS "values" (number INT)')
+        .catch(err => console.log(err));
+    pgClient
+        .query('INSERT INTO "values"(number) VALUES($1)', [index])
+        .catch(err => console.log(err));
 
     res.send({ working: true });
 });
