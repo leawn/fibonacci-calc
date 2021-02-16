@@ -23,3 +23,15 @@ after_success:
   - docker push leawn/fibonacci-calc-nginx
   - docker push leawn/fibonacci-calc-server
   - docker push leawn/fibonacci-calc-worker
+
+deploy:
+  provider: elasticbeanstalk
+  region: "eu-central-1"
+  app: "fibonacci-calc"
+  env: "Fibonaccicalc-env"
+  bucket_name: "elasticbeanstalk-eu-central-1-294372157785"
+  bucket_path: "fibonacci-calc"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
