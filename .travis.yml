@@ -1,0 +1,25 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  # Build testing image
+  - docker build -t leawn/fibonacci-calc-client-test -f ./client/Dockerfile.dev .
+
+script:
+  # Run tests
+  - docker run -e CI=true leawn/fibonacci-calc-client-test npm run test -- --coverage
+
+after_success:
+  # Build all the images
+  - docker build -t leawn/fibonacci-calc-client ./client
+  - docker build -t leawn/fibonacci-calc-nginx ./nginx
+  - docker build -t leawn/fibonacci-calc-server ./server
+  - docker build -t leawn/fibonacci-calc-worker ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take these images and push them to docker hub
+  - docker push leawn/fibonacci-calc-client
+  - docker push leawn/fibonacci-calc-nginx
+  - docker push leawn/fibonacci-calc-server
+  - docker push leawn/fibonacci-calc-worker
